@@ -28,7 +28,7 @@ form.addEventListener('submit', async (event) => {
     form.querySelector('button').disabled = false;
   } else {
     // Payment successful
-    successMessage.style display = 'block';
+    successMessage.style.display = 'block';
 
     // Proceed to generate the timetable
 
