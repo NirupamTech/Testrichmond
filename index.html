@@ -31,27 +31,17 @@
     <input type="number" id="studyTime">
   </div>
 
-  <!-- Payment Form -->
-  <form id="payment-form">
-    <div id="card-element">
-      <!-- Stripe.js will create the card field here -->
-    </div>
-    <div id="card-errors" role="alert"></div>
-    <button type="submit">Pay $1</button>
-  </form>
-
-  <div id="success-message" style="display: none;">
-    Payment successful! You can now generate your timetable.
-  </div>
+  <button onclick="generateTimetable()">Generate Timetable</button>
+  <button onclick="processPayment()">Make $1 Payment</button>
 
   <footer>
-    Powered by <a href="#">Nirupam Tech</a>
+       Powered by <a href="#">Nirupam Tech</a>
   </footer>
 
-  <!-- Include Stripe.js -->
-  <script src="https://js.stripe.com/v3/"></script>
+  <!-- Include formulas.js -->
+  <script src="formulas.js"></script>
 
-  <!-- Include script.js for generating timetable -->
+  <!-- Include script.js -->
   <script src="script.js"></script>
 </body>
 </html>
