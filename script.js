@@ -1,44 +1,41 @@
+// In your JavaScript code (script.js)
 function generateTimetable() {
   const subject = document.getElementById('subject').value;
   const difficulty = document.getElementById('difficulty').value;
   const studyTime = parseInt(document.getElementById('studyTime').value);
 
-  const formulasContent = getFormulasBySubject(subject);
+  // Set the payment amount to $1 (100 cents)
+  const paymentAmount = 100; // $1 = 100 cents
 
-  // Initialize the PayU configuration
-  const payuConfig = {
-    key: 'YOUR_PAYU_API_KEY',
-    txnid: 'UNIQUE_TRANSACTION_ID', // Replace with a unique transaction ID
-    amount: 1, // $1 charge
-    productinfo: 'Study Timetable',
-    firstname: 'User', // Replace with the user's first name
-    email: 'user@example.com', // Replace with the user's email
-    surl: 'http://yourwebsite.com/success', // Replace with your success URL
-    furl: 'http://yourwebsite.com/failure', // Replace with your failure URL
-    service_provider: 'payu_paisa',
+  // Collect the user's input and any other necessary data.
+  const paymentData = {
+    subject,
+    difficulty,
+    studyTime,
+    amount: paymentAmount, // Include the payment amount in your data.
+    // Other payment-related data.
   };
 
-  // Create a form and add PayU parameters
-  const payuForm = document.createElement('form');
-  payuForm.method = 'post';
-  payuForm.action = 'https://test.payu.in/_payment'; // Test environment, change to production when ready
-
-  // Add PayU parameters as hidden fields
-  for (const key in payuConfig) {
-    if (payuConfig.hasOwnProperty(key)) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = payuConfig[key];
-      payuForm.appendChild(input);
-    }
-  }
-
-  // Append the form to the document and submit it
-  document.body.appendChild(payuForm);
-  payuForm.submit();
-
-  // Don't forget to validate and process the PayU response on your server
+  // Send a request to your server to initiate the payment via PayU.
+  fetch('/initiate-payu-payment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Add PayU API client ID and secret keys as headers
+      'PayU-Client-Id': 'e19bef6306905ea7e70d9ae79b80bad3ce8196f03f843ed5c44fd0d323126ad6',
+      'PayU-Client-Secret': '469876ed7bf4282193d12cadeaae0df04025821dc3c8d48f6e2f2f8e16b8166c',
+    },
+    body: JSON.stringify(paymentData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Handle the payment response from your server.
+      console.log(data);
+      // You may need to redirect the user to PayU's payment page.
+    })
+    .catch((error) => {
+      console.error('Payment error:', error);
+    });
 }
 
 // Function to get topics based on subject
