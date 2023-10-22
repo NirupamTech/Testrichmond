@@ -5,26 +5,40 @@ function generateTimetable() {
 
   const formulasContent = getFormulasBySubject(subject);
 
-  const content = `
-    Subject: ${subject}
-    Difficulty: ${difficulty}
-    Total Study Time: ${studyTime} minutes
+  // Initialize the PayU configuration
+  const payuConfig = {
+    key: 'YOUR_PAYU_API_KEY',
+    txnid: 'UNIQUE_TRANSACTION_ID', // Replace with a unique transaction ID
+    amount: 1, // $1 charge
+    productinfo: 'Study Timetable',
+    firstname: 'User', // Replace with the user's first name
+    email: 'user@example.com', // Replace with the user's email
+    surl: 'http://yourwebsite.com/success', // Replace with your success URL
+    furl: 'http://yourwebsite.com/failure', // Replace with your failure URL
+    service_provider: 'payu_paisa',
+  };
 
-    Important Topics:
-    ${getTopicsBySubject(subject)}
+  // Create a form and add PayU parameters
+  const payuForm = document.createElement('form');
+  payuForm.method = 'post';
+  payuForm.action = 'https://test.payu.in/_payment'; // Test environment, change to production when ready
 
-    Formulas:
-    ${formulasContent}
-  `;
+  // Add PayU parameters as hidden fields
+  for (const key in payuConfig) {
+    if (payuConfig.hasOwnProperty(key)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = payuConfig[key];
+      payuForm.appendChild(input);
+    }
+  }
 
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write('<html><head><title>Study Timetable</title></head><body>');
-  printWindow.document.write('<pre>' + content + '</pre>');
-  printWindow.document.write('</body></html>');
-  printWindow.document.close();
+  // Append the form to the document and submit it
+  document.body.appendChild(payuForm);
+  payuForm.submit();
 
-  // Print the window
-  printWindow.print();
+  // Don't forget to validate and process the PayU response on your server
 }
 
 // Function to get topics based on subject
@@ -32,16 +46,4 @@ function getTopicsBySubject(subject) {
   // Add logic to get topics based on subject
   // This is just a placeholder
   return 'Topics for this subject:\nTopic 1: ...\nTopic 2: ...';
-}
-
-// Simulate a $1 payment
-function processPayment() {
-  const paymentAmount = 1; // $1
-
-  // Perform any necessary payment processing logic here
-
-  // Display a success message
-  alert(`Payment of $${paymentAmount} successful!`);
-
-  // You can also trigger other actions or update your application's state here
 }
